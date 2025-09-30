@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto';
+import { LoginDTO } from './dto/login.dto';
 
 @Controller('api-users-v1')
 export class UsersController {
@@ -15,8 +16,8 @@ export class UsersController {
 
     @Post("user")
     @HttpCode(200)
-    async getUserByUsername(@Body() userObject: UserDTO) {
-        const { username, password } = userObject;
+    async getUserByUsername(@Body() userLogged:LoginDTO) {
+        const { username, password } = userLogged;
 
         const userExists = await this.usersService.findUserByUsername(username);
 

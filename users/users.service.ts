@@ -14,14 +14,14 @@ export class UsersService {
         return this.usersRepository.save(user);
     }
 
-    async getAllUsers() {
-        return await this.usersRepository.find();
-    }
-
     async findUserByUsername(username: string): Promise<USERS | null>{
         return await this.usersRepository.findOne({
             where: { username, status: 1 }
         })
+    }
+
+    async getAllUsers() {
+        return await this.usersRepository.find();
     }
 
     async findUser(id?: number) {
