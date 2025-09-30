@@ -3,7 +3,6 @@ import { UserDTO } from './dto/user.dto';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { USERS } from './entity/users.entity';
-import { where } from 'sequelize';
 
 @Injectable()
 export class UsersService {
@@ -19,13 +18,9 @@ export class UsersService {
         return await this.usersRepository.find();
     }
 
-    async findUserByUsername(username: string, password: string) {
+    async findUserByUsername(username: string): Promise<USERS | null>{
         return await this.usersRepository.findOne({
-            where: { 
-                username, 
-                password,
-                status: 1
-            }
+            where: { username, status: 1 }
         })
     }
 
