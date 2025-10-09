@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto';
 import { LoginDTO } from './dto/login.dto';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Controller('api-users-v1')
 export class UsersController {
@@ -9,21 +10,20 @@ export class UsersController {
         private readonly usersService: UsersService
     ) {}
 
-    @Post("upload")
+    @Post("createUser")
     async uploadUser(@Body() userObject: UserDTO) {
-        return this.usersService.uploadUser(userObject);
+        return this.usersService.createUser(userObject);
     }
 
-    @Post("user")
+    @Post("validateLogin")
     @HttpCode(200)
     async getUserByUsername(@Body() userLogged:LoginDTO) {
-        const { username, password } = userLogged;
 
-        const userExists = await this.usersService.findUserByUsername(username);
+        const userExists = await this.usersService.findUserByUsername(userLogged.username);
+        if (!userExists) throw new NotFoundException("User Not Found");
 
-        if (!userExists || userExists.password !== password) {
-            throw new UnauthorizedException("Credenciales incorrectas");
-        }
+        const isValidUser = await this.usersService.validateUser(userLogged);
+        if (!isValidUser) throw new UnauthorizedException("Credenciales incorrectas");
 
         return {
             username: userExists.username,
