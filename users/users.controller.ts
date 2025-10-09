@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto';
 import { LoginDTO } from './dto/login.dto';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Controller('api-users-v1')
 export class UsersController {
